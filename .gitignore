@@ -1,0 +1,5 @@
+packages.config
+bin/
+obj/
+packages/
+Properties/
