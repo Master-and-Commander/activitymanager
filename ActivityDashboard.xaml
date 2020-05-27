@@ -17,8 +17,8 @@
                         <Activity Name="Networking Reading" AskRate="Daily" Type="time"  Goal="5"  ID ="1" />
                         <Activity Name="Python Programming" AskRate="Daily" Type="time" Goal="5"  ID ="2" />
                         <Activity Name="C# Programming" AskRate="Daily" Type="time" Goal="5"  ID ="3" />
-                        <Activity Name="Pullups" AskRate="Monthly" Type="goal" Goal="5"  ID ="4" />
                     </Activities>
+                    
                 </x:XData>
             </XmlDataProvider>
             
@@ -26,12 +26,13 @@
             <XmlDataProvider x:Key="QuizDataSource" XPath="Quizzes">
                 <x:XData>
                     <Quizzes xmlns="">
-                        <Quiz Name="Networking" AskRate="Daily" Type="time"  Goal="5"  ID ="1" />
-                        <Quiz Name="German" AskRate="Daily" Type="time" Goal="5"  ID ="2" />
-                        <Quiz Name="Songs" AskRate="Daily" Type="time" Goal="5"  ID ="3" />
+                        <Quiz Name="Networking"  />
+                        <Quiz Name="German" />
+                        <Quiz Name="Songs" />
                     </Quizzes>
                 </x:XData>
             </XmlDataProvider>
+            
             <DataTemplate x:Key="nameItemTemplate">
                 <Label Content="{Binding XPath=@Name}"/>
             </DataTemplate>
@@ -53,6 +54,15 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
+        <Border Grid.Column="0" Grid.Row="1" Height="35" Padding="5" Background="#4E87D4">
+            <Label VerticalAlignment="Center" Foreground="White">Quizzes</Label>
+        </Border>
+        
+        <ListBox Name="quizListBox" Grid.Column="0" Grid.Row="2" 
+         ItemsSource="{Binding Source={StaticResource QuizDataSource}, XPath=Quiz}"
+         ItemTemplate="{StaticResource nameItemTemplate}">
+        </ListBox>
+
         <Border Grid.Column="1" Grid.Row="1" Height="35" Padding="5" Background="#4E87D4">
             <Label VerticalAlignment="Center" Foreground="White">Activities</Label>
         </Border>
@@ -64,13 +74,15 @@
 
         <!-- View report button -->
 
-
+        <StackPanel  Grid.Column="1" Grid.Row="3"  Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Click="View_Activity_Click">View Activity</Button>
+            <Button Click="Edit_Quiz_Click">Edit Quiz</Button>
+            <Button Click="Take_Quiz_Click">Take Quiz</Button>
+        </StackPanel>
 
         <Label Grid.Column="1" Style="{StaticResource headerTextStyle}">
-            View Activity Details
+            Activity Dashboard
         </Label>
 
-        <!-- View report button -->
-        <Button Grid.Column="1" Grid.Row="3" Click="View_Activity_Click" Style="{StaticResource buttonStyle}">View</Button>
     </Grid>
 </Page>

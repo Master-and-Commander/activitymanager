@@ -25,8 +25,19 @@ namespace Octopus
 
         private void View_Activity_Click(object sender, RoutedEventArgs e)
         {
-            ActivityView expenseReportPage = new ActivityView(this.peopleListBox.SelectedItem);
-            this.NavigationService.Navigate(expenseReportPage);
+            ActivityView activityReportPage = new ActivityView(this.peopleListBox.SelectedItem);
+            this.NavigationService.Navigate(activityReportPage);
+        }
+
+        private void Edit_Quiz_Click(object sender, RoutedEventArgs e)
+        {
+            QuizView quizViewPage = new QuizView(this.quizListBox.SelectedItem);
+            this.NavigationService.Navigate(quizViewPage);
+        }
+        private void Take_Quiz_Click(object sender, RoutedEventArgs e)
+        {
+            QuizTaker takeQuizPage = new QuizTaker(this.quizListBox.SelectedItem);
+            this.NavigationService.Navigate(takeQuizPage);
         }
     }
 }
