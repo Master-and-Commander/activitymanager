@@ -10,7 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.Data.Entity.Core.Objects;
+using System.Linq;
 namespace Octopus
 {
     /// <summary>
@@ -18,6 +19,7 @@ namespace Octopus
     /// </summary>
     public partial class ActivityDashboard : Page
     {
+        Model1 dataEntities = new Model1();
         public ActivityDashboard()
         {
             InitializeComponent();
@@ -38,6 +40,17 @@ namespace Octopus
         {
             QuizTaker takeQuizPage = new QuizTaker(this.quizListBox.SelectedItem);
             this.NavigationService.Navigate(takeQuizPage);
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            var query =
+            from product in dataEntities.Products
+            where product.Color == "Red"
+            orderby product.ListPrice
+            select new { product.Name, product.Color, CategoryName = product.ProductCategory.Name, product.ListPrice };
+
+            dataGrid1.ItemsSource = query.ToList();
         }
     }
 }

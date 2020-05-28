@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Octopus"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Activity Dashboard">
+      Title="Activity Dashboard" Loaded="Page_Loaded">
 
     <Grid>
         <Grid.Resources>

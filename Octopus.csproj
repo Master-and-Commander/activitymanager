@@ -75,6 +75,9 @@
     <Compile Include="ActivityDashboard.xaml.cs">
       <DependentUpon>ActivityDashboard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="QuizQuestions.xaml.cs">
+      <DependentUpon>QuizQuestions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="QuizTaker.xaml.cs">
       <DependentUpon>QuizTaker.xaml</DependentUpon>
     </Compile>
@@ -98,6 +101,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ActivityDashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="QuizQuestions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -141,6 +148,7 @@
     <EntityDeploy Include="Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Model1</CustomToolNamespace>
     </EntityDeploy>
     <None Include="Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>

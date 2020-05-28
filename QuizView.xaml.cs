@@ -29,5 +29,16 @@ namespace Octopus
         {
             this.DataContext = data;
         }
+
+        private void View_Questions_Click(object sender, RoutedEventArgs e)
+        {
+            QuizQuestions quizQuestionsPage = new QuizQuestions();
+            this.NavigationService.Navigate(quizQuestionsPage);
+        }
+
+        private void Update_Quiz_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
