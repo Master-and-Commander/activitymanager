@@ -19,7 +19,6 @@ namespace Octopus
     /// </summary>
     public partial class ActivityDashboard : Page
     {
-        Model1 dataEntities = new Model1();
         public ActivityDashboard()
         {
             InitializeComponent();
@@ -42,15 +41,15 @@ namespace Octopus
             this.NavigationService.Navigate(takeQuizPage);
         }
 
+        private void Add_Quiz_Click(object sender, RoutedEventArgs e)
+        {
+            AddQuiz addQuizPage = new AddQuiz();
+            this.NavigationService.Navigate(addQuizPage);
+        }
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            var query =
-            from product in dataEntities.Products
-            where product.Color == "Red"
-            orderby product.ListPrice
-            select new { product.Name, product.Color, CategoryName = product.ProductCategory.Name, product.ListPrice };
-
-            dataGrid1.ItemsSource = query.ToList();
+            
         }
     }
 }

@@ -4,14 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="8a73bcf4acc54f2db12cfed1e071451d" Name="Diagram1">
-        <EntityTypeShape EntityType="octopusModel.activity" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="octopusModel.activitytracker" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="octopusModel.challenge" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="octopusModel.user" Width="1.5" PointX="2.75" PointY="2.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="octopusModel.quizquestion" Width="1.5" PointX="7.5" PointY="1.625" />
-        <EntityTypeShape EntityType="octopusModel.quizze" Width="1.5" PointX="5.125" PointY="1.625" />
-        <AssociationConnector Association="octopusModel.FK_quizquestions_quizzes" />
+      <Diagram DiagramId="e8085a0d535f4913a2c6e4697106ce5b" Name="Diagram1">
+        <EntityTypeShape EntityType="octopusModel.activity" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="octopusModel.activitytracker" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="octopusModel.challenge" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="octopusModel.quiz" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="octopusModel.quizquestion" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="octopusModel.user" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="octopusModel.FK_quizquestion_quizzes" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

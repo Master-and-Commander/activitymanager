@@ -9,6 +9,7 @@
       Title="Activity Dashboard" Loaded="Page_Loaded">
 
     <Grid>
+        
         <Grid.Resources>
             <!-- Activity Data -->
             <XmlDataProvider x:Key="ActivityDataSource" XPath="Activities">
@@ -57,7 +58,9 @@
         <Border Grid.Column="0" Grid.Row="1" Height="35" Padding="5" Background="#4E87D4">
             <Label VerticalAlignment="Center" Foreground="White">Quizzes</Label>
         </Border>
-        
+
+        <DataGrid Grid.Column="0" Grid.Row="0" Name="dataGrid1" />
+
         <ListBox Name="quizListBox" Grid.Column="0" Grid.Row="2" 
          ItemsSource="{Binding Source={StaticResource QuizDataSource}, XPath=Quiz}"
          ItemTemplate="{StaticResource nameItemTemplate}">
@@ -78,6 +81,7 @@
             <Button Click="View_Activity_Click">View Activity</Button>
             <Button Click="Edit_Quiz_Click">Edit Quiz</Button>
             <Button Click="Take_Quiz_Click">Take Quiz</Button>
+            <Button Click="Add_Quiz_Click">Add Quiz</Button>
         </StackPanel>
 
         <Label Grid.Column="1" Style="{StaticResource headerTextStyle}">

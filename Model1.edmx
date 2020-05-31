@@ -35,57 +35,64 @@
           <Property Name="challenge_issued_time" Type="datetime" Nullable="false" />
           <Property Name="challenge_expiration_time" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityType Name="quizquestions">
+        <EntityType Name="quiz">
           <Key>
-            <PropertyRef Name="quizquestionid" />
+            <PropertyRef Name="id" />
           </Key>
-          <Property Name="quizquestionid" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="count" Type="int" />
+          <Property Name="userid" Type="int" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="quizquestion">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
           <Property Name="quizid" Type="int" Nullable="false" />
           <Property Name="quizquestion" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="quizanswer" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="quizoptions" Type="varchar" MaxLength="300" Nullable="false" />
           <Property Name="quizquestiontype" Type="varchar" MaxLength="25" Nullable="false" />
         </EntityType>
-        <EntityType Name="quizzes">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="description" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="count" Type="int" />
-          <Property Name="creatorid" Type="int" Nullable="false" />
-          <Property Name="name" Type="varchar" MaxLength="50" />
-        </EntityType>
-        <EntityType Name="users">
+        <EntityType Name="user">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="user_initialized" Type="datetime" Nullable="false" />
+          <Property Name="user_password" Type="varchar" MaxLength="100" />
         </EntityType>
-        <Association Name="FK_quizquestions_quizzes">
-          <End Role="quizzes" Type="Self.quizzes" Multiplicity="1" />
-          <End Role="quizquestions" Type="Self.quizquestions" Multiplicity="*" />
+        <Association Name="FK_quizquestion_quizzes">
+          <End Role="quiz" Type="Self.quiz" Multiplicity="1" />
+          <End Role="quizquestion" Type="Self.quizquestion" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="quizzes">
+            <Principal Role="quiz">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="quizquestions">
+            <Dependent Role="quizquestion">
               <PropertyRef Name="quizid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="insertQuiz" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="quizname" Type="varchar" Mode="In" />
+          <Parameter Name="quizcount" Type="int" Mode="In" />
+          <Parameter Name="quizdescription" Type="varchar" Mode="In" />
+          <Parameter Name="Identity" Type="int" Mode="InOut" />
+        </Function>
         <EntityContainer Name="octopusModelStoreContainer">
           <EntitySet Name="activity" EntityType="Self.activity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="activitytracker" EntityType="Self.activitytracker" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="challenge" EntityType="Self.challenge" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="quizquestions" EntityType="Self.quizquestions" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="quizzes" EntityType="Self.quizzes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_quizquestions_quizzes" Association="Self.FK_quizquestions_quizzes">
-            <End Role="quizzes" EntitySet="quizzes" />
-            <End Role="quizquestions" EntitySet="quizquestions" />
+          <EntitySet Name="quiz" EntityType="Self.quiz" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="quizquestion" EntityType="Self.quizquestion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_quizquestion_quizzes" Association="Self.FK_quizquestion_quizzes">
+            <End Role="quiz" EntitySet="quiz" />
+            <End Role="quizquestion" EntitySet="quizquestion" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -122,6 +129,29 @@
           <Property Name="challenge_issued_time" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="challenge_expiration_time" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="quiz">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="count" Type="Int32" />
+          <Property Name="userid" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="quizquestions" Relationship="Self.FK_quizquestion_quizzes" FromRole="quiz" ToRole="quizquestion" />
+        </EntityType>
+        <EntityType Name="quizquestion">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="quizid" Type="Int32" Nullable="false" />
+          <Property Name="quizquestion1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="quizanswer" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="quizoptions" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="quizquestiontype" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="quiz" Relationship="Self.FK_quizquestion_quizzes" FromRole="quizquestion" ToRole="quiz" />
+        </EntityType>
         <EntityType Name="user">
           <Key>
             <PropertyRef Name="id" />
@@ -129,59 +159,13 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="user_initialized" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="user_password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityContainer Name="octopusEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="activities" EntityType="Self.activity" />
-          <EntitySet Name="activitytrackers" EntityType="Self.activitytracker" />
-          <EntitySet Name="challenges" EntityType="Self.challenge" />
-          <EntitySet Name="users" EntityType="Self.user" />
-          <EntitySet Name="quizquestions" EntityType="octopusModel.quizquestion" />
-          <EntitySet Name="quizzes" EntityType="octopusModel.quizze" />
-          <AssociationSet Name="FK_quizquestions_quizzes" Association="octopusModel.FK_quizquestions_quizzes">
-            <End Role="quizze" EntitySet="quizzes" />
-            <End Role="quizquestion" EntitySet="quizquestions" />
-          </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="quizquestion">
-          <Key>
-            <PropertyRef Name="quizquestionid" />
-            <PropertyRef Name="quizid" />
-            <PropertyRef Name="quizquestion1" />
-            <PropertyRef Name="quizanswer" />
-            <PropertyRef Name="quizoptions" />
-            <PropertyRef Name="quizquestiontype" />
-          </Key>
-          <Property Name="quizquestionid" Type="Int32" Nullable="false" />
-          <Property Name="quizid" Type="Int32" Nullable="false" />
-          <Property Name="quizquestion1" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="quizanswer" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="quizoptions" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="quizquestiontype" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="quizze" Relationship="octopusModel.FK_quizquestions_quizzes" FromRole="quizquestion" ToRole="quizze" />
-        </EntityType>
-        <EntityType Name="quizze">
-          <Key>
-            <PropertyRef Name="quizid" />
-            <PropertyRef Name="quizdescription" />
-            <PropertyRef Name="quizcreatorid" />
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="quizid" Type="Int32" Nullable="false" />
-          <Property Name="quizdescription" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="quizcount" Type="Int32" />
-          <Property Name="quizcreatorid" Type="Int32" Nullable="false" />
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="count" Type="Int32" />
-          <Property Name="creatorid" Type="Int32" Nullable="false" />
-          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="quizquestions" Relationship="octopusModel.FK_quizquestions_quizzes" FromRole="quizze" ToRole="quizquestion" />
-        </EntityType>
-        <Association Name="FK_quizquestions_quizzes">
-          <End Type="octopusModel.quizze" Role="quizze" Multiplicity="1" />
-          <End Type="octopusModel.quizquestion" Role="quizquestion" Multiplicity="*" />
+        <Association Name="FK_quizquestion_quizzes">
+          <End Role="quiz" Type="Self.quiz" Multiplicity="1" />
+          <End Role="quizquestion" Type="Self.quizquestion" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="quizze">
+            <Principal Role="quiz">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="quizquestion">
@@ -189,12 +173,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityContainer Name="octopusEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="activities" EntityType="Self.activity" />
+          <EntitySet Name="activitytrackers" EntityType="Self.activitytracker" />
+          <EntitySet Name="challenges" EntityType="Self.challenge" />
+          <EntitySet Name="quizs" EntityType="Self.quiz" />
+          <EntitySet Name="quizquestions" EntityType="Self.quizquestion" />
+          <EntitySet Name="users" EntityType="Self.user" />
+          <AssociationSet Name="FK_quizquestion_quizzes" Association="Self.FK_quizquestion_quizzes">
+            <End Role="quiz" EntitySet="quizs" />
+            <End Role="quizquestion" EntitySet="quizquestions" />
+          </AssociationSet>
+          <FunctionImport Name="insertQuiz">
+            <Parameter Name="quizname" Mode="In" Type="String" />
+            <Parameter Name="quizcount" Mode="In" Type="Int32" />
+            <Parameter Name="quizdescription" Mode="In" Type="String" />
+            <Parameter Name="Identity" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="octopusModelStoreContainer" CdmEntityContainer="octopusEntities">
+        <EntityContainerMapping StorageEntityContainer="octopusModelStoreContainer" CdmEntityContainer="octopusEntities1">
           <EntitySetMapping Name="activities">
             <EntityTypeMapping TypeName="octopusModel.activity">
               <MappingFragment StoreEntitySet="activity">
@@ -228,38 +230,40 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="users">
-            <EntityTypeMapping TypeName="octopusModel.user">
-              <MappingFragment StoreEntitySet="users">
+          <EntitySetMapping Name="quizs">
+            <EntityTypeMapping TypeName="octopusModel.quiz">
+              <MappingFragment StoreEntitySet="quiz">
                 <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
                 <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="user_initialized" ColumnName="user_initialized" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="quizquestions">
             <EntityTypeMapping TypeName="octopusModel.quizquestion">
-              <MappingFragment StoreEntitySet="quizquestions">
-                <ScalarProperty Name="quizquestiontype" ColumnName="quizquestiontype" />
-                <ScalarProperty Name="quizoptions" ColumnName="quizoptions" />
-                <ScalarProperty Name="quizanswer" ColumnName="quizanswer" />
-                <ScalarProperty Name="quizquestion1" ColumnName="quizquestion" />
-                <ScalarProperty Name="quizid" ColumnName="quizid" />
-                <ScalarProperty Name="quizquestionid" ColumnName="quizquestionid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="quizzes">
-            <EntityTypeMapping TypeName="octopusModel.quizze">
-              <MappingFragment StoreEntitySet="quizzes">
-              <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="creatorid" ColumnName="creatorid" />
-                <ScalarProperty Name="count" ColumnName="count" />
-                <ScalarProperty Name="description" ColumnName="description" />
+              <MappingFragment StoreEntitySet="quizquestion">
                 <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="quizid" ColumnName="quizid" />
+                <ScalarProperty Name="quizquestion1" ColumnName="quizquestion" />
+                <ScalarProperty Name="quizanswer" ColumnName="quizanswer" />
+                <ScalarProperty Name="quizoptions" ColumnName="quizoptions" />
+                <ScalarProperty Name="quizquestiontype" ColumnName="quizquestiontype" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="octopusModel.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="user_initialized" ColumnName="user_initialized" />
+                <ScalarProperty Name="user_password" ColumnName="user_password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="insertQuiz" FunctionName="octopusModel.Store.insertQuiz" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
