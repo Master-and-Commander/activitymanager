@@ -49,7 +49,9 @@ namespace Octopus
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            octopusEntities1 db = new octopusEntities1();
+            dataGrid1.ItemsSource = db.selectQuizzes().ToList();
+
         }
     }
 }

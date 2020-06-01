@@ -83,6 +83,7 @@
           <Parameter Name="quizdescription" Type="varchar" Mode="In" />
           <Parameter Name="Identity" Type="int" Mode="InOut" />
         </Function>
+        <Function Name="selectQuizzes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="octopusModelStoreContainer">
           <EntitySet Name="activity" EntityType="Self.activity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="activitytracker" EntityType="Self.activitytracker" Schema="dbo" store:Type="Tables" />
@@ -190,7 +191,15 @@
             <Parameter Name="quizdescription" Mode="In" Type="String" />
             <Parameter Name="Identity" Mode="InOut" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="selectQuizzes" ReturnType="Collection(octopusModel.selectQuizzes_Result)" />
         </EntityContainer>
+        <ComplexType Name="selectQuizzes_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="count" Nullable="true" />
+          <Property Type="Int32" Name="userid" Nullable="true" />
+          <Property Type="String" Name="name" Nullable="true" MaxLength="50" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -264,6 +273,17 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="insertQuiz" FunctionName="octopusModel.Store.insertQuiz" />
+          <FunctionImportMapping FunctionImportName="selectQuizzes" FunctionName="octopusModel.Store.selectQuizzes">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="octopusModel.selectQuizzes_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

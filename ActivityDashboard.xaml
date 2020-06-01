@@ -59,7 +59,9 @@
             <Label VerticalAlignment="Center" Foreground="White">Quizzes</Label>
         </Border>
 
-        <DataGrid Grid.Column="0" Grid.Row="0" Name="dataGrid1" />
+        <DataGrid Grid.Column="0" Grid.Row="0" Name="dataGrid1"
+          ItemTemplate="{StaticResource nameItemTemplate}">
+        </DataGrid>
 
         <ListBox Name="quizListBox" Grid.Column="0" Grid.Row="2" 
          ItemsSource="{Binding Source={StaticResource QuizDataSource}, XPath=Quiz}"

@@ -12,10 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Data.OleDb;
-using System.Data;
-using System.Data.SqlClient;
-using Octopus;
 
 
 namespace Octopus
@@ -33,7 +29,6 @@ namespace Octopus
         public void Insert_Quiz_Click(object sender, RoutedEventArgs e)
         {
             octopusEntities1 db = new octopusEntities1();
-            var special = 100;
             // check validity of fields
             if (txtQuizName.Text.Trim() == "")
             {
@@ -59,16 +54,6 @@ namespace Octopus
                 //var newQuiz = new quiz { name = txtQuizName.Text, description = txtDescription.Text, count = int.Parse(txtNumber.Text) };
                 try
                 {
-                    SqlCommand cmd = new SqlCommand();
-                    /*
-                   db.Database.SqlQuery<quiz>(
-                    "EXEC insertQuiz @quizname, @quizcount, @quizdescription ",
-                    new SqlParameter("quizname", txtQuizName.Text), 
-                    new SqlParameter("quizcount", int.Parse(txtNumber.Text)),
-                    new SqlParameter("quizdescription", txtDescription.Text)
-                      );
-                    */
-                    // ObjectParameter param = new ObjectParameter("identity", 0);
                     System.Data.Entity.Core.Objects.ObjectParameter param = new System.Data.Entity.Core.Objects.ObjectParameter("Identity",0);
                    var id = db.insertQuiz(txtQuizName.Text, int.Parse(txtNumber.Text), txtDescription.Text, param);
                     
