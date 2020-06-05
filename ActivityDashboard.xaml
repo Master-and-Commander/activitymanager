@@ -23,19 +23,13 @@
                 </x:XData>
             </XmlDataProvider>
             
-            <!-- Quiz Data -->
-            <XmlDataProvider x:Key="QuizDataSource" XPath="Quizzes">
-                <x:XData>
-                    <Quizzes xmlns="">
-                        <Quiz Name="Networking"  />
-                        <Quiz Name="German" />
-                        <Quiz Name="Songs" />
-                    </Quizzes>
-                </x:XData>
-            </XmlDataProvider>
+           
             
             <DataTemplate x:Key="nameItemTemplate">
                 <Label Content="{Binding XPath=@Name}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="quizItemTemplate">
+                <Label Content="{Binding name}"/>
             </DataTemplate>
         </Grid.Resources>
 
@@ -59,13 +53,9 @@
             <Label VerticalAlignment="Center" Foreground="White">Quizzes</Label>
         </Border>
 
-        <DataGrid Grid.Column="0" Grid.Row="0" Name="dataGrid1"
-          ItemTemplate="{StaticResource nameItemTemplate}">
-        </DataGrid>
-
         <ListBox Name="quizListBox" Grid.Column="0" Grid.Row="2" 
-         ItemsSource="{Binding Source={StaticResource QuizDataSource}, XPath=Quiz}"
-         ItemTemplate="{StaticResource nameItemTemplate}">
+         ItemsSource="{Binding}"
+         ItemTemplate="{StaticResource quizItemTemplate}">
         </ListBox>
 
         <Border Grid.Column="1" Grid.Row="1" Height="35" Padding="5" Background="#4E87D4">

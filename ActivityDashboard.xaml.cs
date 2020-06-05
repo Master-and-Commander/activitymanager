@@ -11,18 +11,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.Entity.Core.Objects;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 namespace Octopus
 {
     /// <summary>
     /// Interaction logic for ActivityDashboard.xaml
     /// </summary>
+    /* https://parallelcodes.com/wpf-mvvm-listbox-binding-from-sql-database/ */
+
     public partial class ActivityDashboard : Page
     {
         public ActivityDashboard()
         {
             InitializeComponent();
+            octopusEntities1 co = new octopusEntities1();
+            quizListBox.ItemsSource = co.selectQuizzes();
         }
+
 
         private void View_Activity_Click(object sender, RoutedEventArgs e)
         {
@@ -47,11 +54,6 @@ namespace Octopus
             this.NavigationService.Navigate(addQuizPage);
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            octopusEntities1 db = new octopusEntities1();
-            dataGrid1.ItemsSource = db.selectQuizzes().ToList();
-
-        }
+      
     }
 }

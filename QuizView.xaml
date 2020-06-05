@@ -22,18 +22,18 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
             <Label  Margin="0,0,0,5" FontWeight="Bold">Quiz Name:</Label>
-            <Label Content="{Binding XPath=@Name}"></Label>
+            <Label Content="{Binding name}"></Label>
         </StackPanel>
         
 
         <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <Label>Subject</Label>
-                <TextBox Text="{Binding XPath=@Name}"></TextBox>
+                <Label>Description</Label>
+                <TextBox Text="{Binding description}"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label>Number of questions</Label>
-                <TextBox Text="{Binding XPath=@Name}"></TextBox>
+                <TextBox Text="{Binding count}"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Button Click="View_Questions_Click">View Questions</Button>
