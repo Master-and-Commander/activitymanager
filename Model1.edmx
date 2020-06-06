@@ -83,6 +83,7 @@
           <Parameter Name="quizdescription" Type="varchar" Mode="In" />
           <Parameter Name="Identity" Type="int" Mode="InOut" />
         </Function>
+        <Function Name="selectActivities" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="selectQuizzes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="octopusModelStoreContainer">
           <EntitySet Name="activity" EntityType="Self.activity" Schema="dbo" store:Type="Tables" />
@@ -192,6 +193,7 @@
             <Parameter Name="Identity" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="selectQuizzes" ReturnType="Collection(octopusModel.selectQuizzes_Result)" />
+          <FunctionImport Name="selectActivities" ReturnType="Collection(octopusModel.selectActivities_Result)" />
         </EntityContainer>
         <ComplexType Name="selectQuizzes_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -199,6 +201,14 @@
           <Property Type="Int32" Name="count" Nullable="true" />
           <Property Type="Int32" Name="userid" Nullable="true" />
           <Property Type="String" Name="name" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="selectActivities_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="750" />
+          <Property Type="Int32" Name="goal" Nullable="false" />
+          <Property Type="String" Name="askrate" Nullable="true" MaxLength="25" />
+          <Property Type="DateTime" Name="activity_begun" Nullable="false" Precision="23" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -281,6 +291,18 @@
                 <ScalarProperty Name="count" ColumnName="count" />
                 <ScalarProperty Name="userid" ColumnName="userid" />
                 <ScalarProperty Name="name" ColumnName="name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="selectActivities" FunctionName="octopusModel.Store.selectActivities">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="octopusModel.selectActivities_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="goal" ColumnName="goal" />
+                <ScalarProperty Name="askrate" ColumnName="askrate" />
+                <ScalarProperty Name="activity_begun" ColumnName="activity_begun" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -9,7 +9,7 @@
         <EntityTypeShape EntityType="octopusModel.activitytracker" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="octopusModel.challenge" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="octopusModel.quiz" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="octopusModel.quizquestion" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="octopusModel.quizquestion" Width="1.5" PointX="2.875" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="octopusModel.user" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="octopusModel.FK_quizquestion_quizzes" ManuallyRouted="false" />
       </Diagram>

@@ -55,5 +55,10 @@ namespace Octopus
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<selectQuizzes_Result>("selectQuizzes");
         }
+    
+        public virtual ObjectResult<selectActivities_Result> selectActivities()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<selectActivities_Result>("selectActivities");
+        }
     }
 }

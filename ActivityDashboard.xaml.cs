@@ -28,12 +28,14 @@ namespace Octopus
             InitializeComponent();
             octopusEntities1 co = new octopusEntities1();
             quizListBox.ItemsSource = co.selectQuizzes();
+            activityListBox.ItemsSource = co.selectActivities();
+
         }
 
 
         private void View_Activity_Click(object sender, RoutedEventArgs e)
         {
-            ActivityView activityReportPage = new ActivityView(this.peopleListBox.SelectedItem);
+            ActivityView activityReportPage = new ActivityView(this.activityListBox.SelectedItem);
             this.NavigationService.Navigate(activityReportPage);
         }
 
