@@ -77,6 +77,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="getQuizQuestions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="quizid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="insertQuestionToQuiz" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="entryid" Type="int" Mode="In" />
+          <Parameter Name="entryquestion" Type="varchar" Mode="In" />
+          <Parameter Name="entryanswer" Type="varchar" Mode="In" />
+          <Parameter Name="entryoptions" Type="varchar" Mode="In" />
+          <Parameter Name="entrytype" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="insertQuiz" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="quizname" Type="varchar" Mode="In" />
           <Parameter Name="quizcount" Type="int" Mode="In" />
@@ -194,6 +204,16 @@
           </FunctionImport>
           <FunctionImport Name="selectQuizzes" ReturnType="Collection(octopusModel.selectQuizzes_Result)" />
           <FunctionImport Name="selectActivities" ReturnType="Collection(octopusModel.selectActivities_Result)" />
+          <FunctionImport Name="insertQuestionToQuiz">
+            <Parameter Name="entryid" Mode="In" Type="Int32" />
+            <Parameter Name="entryquestion" Mode="In" Type="String" />
+            <Parameter Name="entryanswer" Mode="In" Type="String" />
+            <Parameter Name="entryoptions" Mode="In" Type="String" />
+            <Parameter Name="entrytype" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getQuizQuestions" ReturnType="Collection(octopusModel.getQuizQuestions_Result)">
+            <Parameter Name="quizid" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="selectQuizzes_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -209,6 +229,14 @@
           <Property Type="Int32" Name="goal" Nullable="false" />
           <Property Type="String" Name="askrate" Nullable="true" MaxLength="25" />
           <Property Type="DateTime" Name="activity_begun" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="getQuizQuestions_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="Int32" Name="quizid" Nullable="false" />
+          <Property Type="String" Name="quizquestion" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="quizanswer" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="quizoptions" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="quizquestiontype" Nullable="false" MaxLength="25" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -303,6 +331,19 @@
                 <ScalarProperty Name="goal" ColumnName="goal" />
                 <ScalarProperty Name="askrate" ColumnName="askrate" />
                 <ScalarProperty Name="activity_begun" ColumnName="activity_begun" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="insertQuestionToQuiz" FunctionName="octopusModel.Store.insertQuestionToQuiz" />
+          <FunctionImportMapping FunctionImportName="getQuizQuestions" FunctionName="octopusModel.Store.getQuizQuestions">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="octopusModel.getQuizQuestions_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="quizid" ColumnName="quizid" />
+                <ScalarProperty Name="quizquestion" ColumnName="quizquestion" />
+                <ScalarProperty Name="quizanswer" ColumnName="quizanswer" />
+                <ScalarProperty Name="quizoptions" ColumnName="quizoptions" />
+                <ScalarProperty Name="quizquestiontype" ColumnName="quizquestiontype" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

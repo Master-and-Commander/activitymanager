@@ -60,5 +60,39 @@ namespace Octopus
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<selectActivities_Result>("selectActivities");
         }
+    
+        public virtual int insertQuestionToQuiz(Nullable<int> entryid, string entryquestion, string entryanswer, string entryoptions, string entrytype)
+        {
+            var entryidParameter = entryid.HasValue ?
+                new ObjectParameter("entryid", entryid) :
+                new ObjectParameter("entryid", typeof(int));
+    
+            var entryquestionParameter = entryquestion != null ?
+                new ObjectParameter("entryquestion", entryquestion) :
+                new ObjectParameter("entryquestion", typeof(string));
+    
+            var entryanswerParameter = entryanswer != null ?
+                new ObjectParameter("entryanswer", entryanswer) :
+                new ObjectParameter("entryanswer", typeof(string));
+    
+            var entryoptionsParameter = entryoptions != null ?
+                new ObjectParameter("entryoptions", entryoptions) :
+                new ObjectParameter("entryoptions", typeof(string));
+    
+            var entrytypeParameter = entrytype != null ?
+                new ObjectParameter("entrytype", entrytype) :
+                new ObjectParameter("entrytype", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("insertQuestionToQuiz", entryidParameter, entryquestionParameter, entryanswerParameter, entryoptionsParameter, entrytypeParameter);
+        }
+    
+        public virtual ObjectResult<getQuizQuestions_Result> getQuizQuestions(Nullable<int> quizid)
+        {
+            var quizidParameter = quizid.HasValue ?
+                new ObjectParameter("quizid", quizid) :
+                new ObjectParameter("quizid", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<getQuizQuestions_Result>("getQuizQuestions", quizidParameter);
+        }
     }
 }

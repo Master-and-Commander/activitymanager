@@ -24,5 +24,17 @@ namespace Octopus
         {
             InitializeComponent();
         }
+
+        public void Add_Question_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public QuizQuestions(int id) : this()
+        {
+            octopusEntities1 db = new octopusEntities1();
+            
+            questionListBox.ItemsSource = db.getQuizQuestions(id);
+        }
     }
 }

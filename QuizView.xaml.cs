@@ -30,12 +30,21 @@ namespace Octopus
             this.DataContext = data;
         }
 
+        // view questions opens quiz questions page where questions can be added or removed
+
         private void View_Questions_Click(object sender, RoutedEventArgs e)
         {
-            QuizQuestions quizQuestionsPage = new QuizQuestions();
+            /* Not sure how to get this one to work https://stackoverflow.com/questions/3841069/passing-a-value-along-from-a-button-in-a-wpf-listview
+             * TextBox textBox = (TextBox)sender;
+
+                int id =  ((TheBounObjectType)textBox.DataContext).Id;
+             */
+            int id = int.Parse(View_Quiz_Button.Tag.ToString());
+            QuizQuestions quizQuestionsPage = new QuizQuestions(id);
             this.NavigationService.Navigate(quizQuestionsPage);
         }
 
+        // update quiz updates name and count
         private void Update_Quiz_Click(object sender, RoutedEventArgs e)
         {
 
