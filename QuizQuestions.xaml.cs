@@ -20,6 +20,7 @@ namespace Octopus
     /// </summary>
     public partial class QuizQuestions : Page
     {
+        int quizid;
         public QuizQuestions()
         {
             InitializeComponent();
@@ -27,12 +28,27 @@ namespace Octopus
 
         public void Add_Question_Click(object sender, RoutedEventArgs e)
         {
+            bool pass = true;
+            octopusEntities1 db = new octopusEntities1();
+            if (newQuestion.Text.Trim() == "" || newAnswer.Text.Trim() == "" || newOptions.Text.Trim() == "")
+                pass = false;
 
+            if(pass)
+            {
+                db.insertQuestionToQuiz(quizid, newQuestion.Text, newAnswer.Text, newOptions.Text, "basic");
+
+            }
+            else
+            {
+                MessageBox.Show("Missing entry" ,"Validation");
+            }
+            // insert question
         }
 
         public QuizQuestions(int id) : this()
         {
             octopusEntities1 db = new octopusEntities1();
+            quizid = id;
             
             questionListBox.ItemsSource = db.getQuizQuestions(id);
         }

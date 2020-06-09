@@ -16,7 +16,7 @@
 
         <Grid.Resources>
             <DataTemplate x:Key="quizItemTemplate">
-                <Label Content="{Binding name}"/>
+                <Label Content="{Binding quizquestion}"/>
             </DataTemplate>
         </Grid.Resources>
 

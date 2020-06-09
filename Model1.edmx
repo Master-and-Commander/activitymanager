@@ -49,7 +49,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="quizid" Type="int" Nullable="false" />
           <Property Name="quizquestion" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="quizanswer" Type="varchar" MaxLength="100" Nullable="false" />
@@ -212,7 +212,7 @@
             <Parameter Name="entrytype" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="getQuizQuestions" ReturnType="Collection(octopusModel.getQuizQuestions_Result)">
-            <Parameter Name="quizid" Mode="In" Type="Int32" />
+          <Parameter Name="quizid" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="selectQuizzes_Result">
