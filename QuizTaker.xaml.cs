@@ -18,16 +18,107 @@ namespace Octopus
     /// <summary>
     /// Interaction logic for QuizTaker.xaml
     /// </summary>
+    /// 
+    
     public partial class QuizTaker : Page
     {
+        int pointer = 0;
+        Octopus.getQuizQuestions_Result myQuestion;
+        bool[] answers = new bool[10];
         public QuizTaker()
         {
             InitializeComponent();
         }
 
+        
         public QuizTaker(object data) : this()
         {
             this.DataContext = data;
+            
+        }
+
+        public QuizTaker(int id) :  this()
+        {
+            octopusEntities1 db = new octopusEntities1();
+            questionListBox.ItemsSource = db.getQuizQuestions(id);
+            myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
+            questionHandler();
+        }
+
+        public void questionHandler()
+        {
+            // find the selected answer and save it
+
+            // remove old question and options
+            questionpane.Children.Clear();
+
+            // add new question and options
+            Label newQuestionLabel = new Label();
+            newQuestionLabel.Name = "QuestionTitle"+pointer;
+            newQuestionLabel.Content = myQuestion.quizquestion;
+
+            questionpane.Children.Add(newQuestionLabel);
+
+            string[] options = myQuestion.quizoptions.Split('|').Select(str => str.Trim()).ToArray();
+
+            StackPanel newQuestionOptionsPane = new StackPanel();
+            newQuestionOptionsPane.Name = "Questions"+pointer;
+
+            CheckBox box = new CheckBox();
+            TextBlock block = new TextBlock();
+            StackPanel newOptionsPane = new StackPanel();
+
+            int counter = 0;
+            foreach(string option in options)
+            {
+                newOptionsPane = new StackPanel();
+                newOptionsPane.Orientation = Orientation.Horizontal;
+                box = new CheckBox();
+                box.Margin = new Thickness(30,10,0,5);
+                box.Name = "chk" + counter;
+
+                block = new TextBlock();
+                block.Name = "option" + counter;
+                block.Text = option.Trim();
+
+                newOptionsPane.Children.Add(box);
+
+                newOptionsPane.Children.Add(block);
+
+
+
+
+                questionpane.Children.Add(newOptionsPane);
+
+
+
+
+                counter++;
+
+            }
+
+
+
+        }
+
+        public void Submit_Quiz_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public void Next_Question_Click(object sender, RoutedEventArgs e)
+        {
+            pointer++;
+            myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
+            questionHandler();
+
+        }
+
+        public void Previous_Question_Click(object sender, RoutedEventArgs e)
+        {
+            pointer--;
+            myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
+            questionHandler();
         }
     }
 }

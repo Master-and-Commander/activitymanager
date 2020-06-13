@@ -18,6 +18,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="75px" />
+            <RowDefinition Height="275px"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
@@ -28,14 +29,43 @@
             <Label  Margin="30,30,0,5" FontWeight="Bold" FontSize="15px"  >Questions</Label>
             
         </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical">
-            <ListBox Name="questionListBox" Height="300"
+        <ListBox Name="questionListBox" Height="275"  Grid.Column="0" Grid.Row="1"
                  ItemsSource="{Binding}">
-            </ListBox>
-            <Button Click="Insert_Quiz_Click">Submit Quiz</Button>
-            
+        </ListBox>
+        
+        <Button Grid.Column="0" Grid.Row="2" Click="Submit_Quiz_Click">Submit Quiz</Button>
+        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Vertical" Name="questionpane">
+            <Label  Margin="30,30,0,5" FontWeight="Bold" FontSize="15px" Name="QuestionTitle" >Insert question here?</Label>
+            <StackPanel Orientation="Vertical" Name="Questions" >
+        
 
+        <StackPanel Orientation="Horizontal">
+                <CheckBox Margin="30,10,0,5" />
+                <TextBlock Name = "option1" Text="Hello there my old friend"  Margin = "10" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Margin="30,10,0,5" />
+                <TextBlock Name = "option2" Text="Hello there my old friend"  Margin = "10" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Margin="30,10,0,5" />
+                <TextBlock Name = "option3" Text="Hello there my old friend"  Margin = "10" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Margin="30,10,0,5" />
+                <TextBlock Name = "option4" Text="Hello there my old friend"  Margin = "10" />
+            </StackPanel>
+           </StackPanel>
         </StackPanel>
+        <StackPanel  Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+            <Button Click="Previous_Question_Click">Previous</Button>
+            <Button Click="Next_Question_Click">Next</Button>
+            
+        </StackPanel>
+
     </Grid>
     
 </Page>
