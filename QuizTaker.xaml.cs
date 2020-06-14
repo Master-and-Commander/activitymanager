@@ -47,7 +47,21 @@ namespace Octopus
 
         public void questionHandler()
         {
+            bool correctAnswer = false;
             // find the selected answer and save it
+            foreach (var child in questionpane.Children.OfType<CheckBox>().Where(cb => (bool)cb.IsChecked))
+            {
+                if ((string)child.Tag == "right")
+                    correctAnswer = true;
+            }
+            if (!correctAnswer)
+            {
+                answers[pointer] = false;
+            }
+            else
+            {
+                answers[pointer] = true;
+            }
 
             // remove old question and options
             questionpane.Children.Clear();
@@ -58,16 +72,17 @@ namespace Octopus
             newQuestionLabel.Content = myQuestion.quizquestion;
 
             questionpane.Children.Add(newQuestionLabel);
-
+            Random rnd = new Random();
+            
             string[] options = myQuestion.quizoptions.Split('|').Select(str => str.Trim()).ToArray();
-
+            int spot = rnd.Next(0, options.Length);
             StackPanel newQuestionOptionsPane = new StackPanel();
             newQuestionOptionsPane.Name = "Questions"+pointer;
 
             CheckBox box = new CheckBox();
             TextBlock block = new TextBlock();
             StackPanel newOptionsPane = new StackPanel();
-
+            bool added = false;
             int counter = 0;
             foreach(string option in options)
             {
@@ -76,25 +91,46 @@ namespace Octopus
                 box = new CheckBox();
                 box.Margin = new Thickness(30,10,0,5);
                 box.Name = "chk" + counter;
+                box.Tag = "wrong";
 
                 block = new TextBlock();
                 block.Name = "option" + counter;
                 block.Text = option.Trim();
 
+                if(counter == spot)
+                {
+                    StackPanel answerPane = new StackPanel();
+                    CheckBox boxAnswer = new CheckBox();
+                    boxAnswer.Margin = new Thickness(30, 10, 0, 5);
+                    TextBlock blockAnswer = new TextBlock();
+                    boxAnswer.Tag = "right";
+                    blockAnswer.Text = myQuestion.quizanswer.Trim();
+                    added = true;
+
+                    answerPane.Children.Add(boxAnswer);
+                    answerPane.Children.Add(blockAnswer);
+                    questionpane.Children.Add(answerPane);
+                }
+
                 newOptionsPane.Children.Add(box);
-
                 newOptionsPane.Children.Add(block);
-
-
-
-
                 questionpane.Children.Add(newOptionsPane);
-
-
-
-
                 counter++;
 
+            }
+            if(!added)
+            {
+                StackPanel answerPane = new StackPanel();
+                CheckBox boxAnswer = new CheckBox();
+                boxAnswer.Margin = new Thickness(30, 10, 0, 5);
+                TextBlock blockAnswer = new TextBlock();
+                boxAnswer.Tag = "right";
+                blockAnswer.Text = myQuestion.quizanswer.Trim();
+                added = true;
+
+                answerPane.Children.Add(boxAnswer);
+                answerPane.Children.Add(blockAnswer);
+                questionpane.Children.Add(answerPane);
             }
 
 
