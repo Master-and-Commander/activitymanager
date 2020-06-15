@@ -49,13 +49,27 @@ namespace Octopus
         {
             bool correctAnswer = false;
             // find the selected answer and save it
-            foreach (var child in questionpane.Children.OfType<CheckBox>().Where(cb => (bool)cb.IsChecked))
+            foreach (var child in questionpane.Children.OfType<StackPanel>())
             {
-                if ((string)child.Tag == "right")
-                    correctAnswer = true;
+                foreach(var childchild in child.Children.OfType<CheckBox>().Where(cb => (bool)cb.IsChecked))
+                {
+                    
+                    if((string)childchild.Tag == "right")
+                    {
+                        MessageBox.Show("Correct! ", "Validation"); 
+                        correctAnswer = true;
+                    }
+                    else
+                    {
+                        correctAnswer = false;
+                    }
+                    
+                }
+                
             }
             if (!correctAnswer)
             {
+                
                 answers[pointer] = false;
             }
             else
@@ -88,9 +102,9 @@ namespace Octopus
             {
                 newOptionsPane = new StackPanel();
                 newOptionsPane.Orientation = Orientation.Horizontal;
+
                 box = new CheckBox();
                 box.Margin = new Thickness(30,10,0,5);
-                box.Name = "chk" + counter;
                 box.Tag = "wrong";
 
                 block = new TextBlock();
@@ -100,10 +114,14 @@ namespace Octopus
                 if(counter == spot)
                 {
                     StackPanel answerPane = new StackPanel();
+                    answerPane.Orientation = Orientation.Horizontal;
+
                     CheckBox boxAnswer = new CheckBox();
                     boxAnswer.Margin = new Thickness(30, 10, 0, 5);
-                    TextBlock blockAnswer = new TextBlock();
                     boxAnswer.Tag = "right";
+
+                    TextBlock blockAnswer = new TextBlock();
+                    
                     blockAnswer.Text = myQuestion.quizanswer.Trim();
                     added = true;
 
@@ -144,6 +162,7 @@ namespace Octopus
 
         public void Next_Question_Click(object sender, RoutedEventArgs e)
         {
+            if (pointer == 5)
             pointer++;
             myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
             questionHandler();
