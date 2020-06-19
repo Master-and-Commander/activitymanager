@@ -36,6 +36,11 @@ namespace Octopus
             if(pass)
             {
                 db.insertQuestionToQuiz(quizid, newQuestion.Text, newAnswer.Text, newOptions.Text, "basic");
+                newQuestion.Text = "";
+                newAnswer.Text = "";
+                newOptions.Text = "";
+                MessageBox.Show("Question inserted!", "Validation");
+
 
             }
             else

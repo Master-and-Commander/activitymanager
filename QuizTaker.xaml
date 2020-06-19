@@ -9,6 +9,11 @@
       Title="QuizTaker">
 
     <Grid>
+        <Grid.Resources>
+            <DataTemplate x:Key="questionItemTemplate">
+                <Label Content="{Binding quizquestion}"/>
+            </DataTemplate>
+        </Grid.Resources>
         <Grid.Background>
             <SolidColorBrush Color="#DDCCD0"/>
         </Grid.Background>
@@ -30,7 +35,7 @@
             
         </StackPanel>
         <ListBox Name="questionListBox" Height="275"  Grid.Column="0" Grid.Row="1"
-                 ItemsSource="{Binding}">
+                 ItemsSource="{Binding}" ItemTemplate="{StaticResource questionItemTemplate}">
         </ListBox>
         
         <Button Grid.Column="0" Grid.Row="2" Click="Submit_Quiz_Click">Submit Quiz</Button>
@@ -61,8 +66,8 @@
            </StackPanel>
         </StackPanel>
         <StackPanel  Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
-            <Button Click="Previous_Question_Click">Previous</Button>
-            <Button Click="Next_Question_Click">Next</Button>
+            <Button Click="Previous_Question_Click" Name ="previous_button">Previous</Button>
+            <Button Click="Next_Question_Click" Name ="next_button">Next</Button>
             
         </StackPanel>
 

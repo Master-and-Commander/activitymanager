@@ -45,38 +45,28 @@ namespace Octopus
             questionHandler();
         }
 
-        public void questionHandler()
+        public void checkAnswer()
         {
             bool correctAnswer = false;
             // find the selected answer and save it
             foreach (var child in questionpane.Children.OfType<StackPanel>())
             {
-                foreach(var childchild in child.Children.OfType<CheckBox>().Where(cb => (bool)cb.IsChecked))
+                foreach (var childchild in child.Children.OfType<CheckBox>().Where(cb => (bool)cb.IsChecked))
                 {
-                    
-                    if((string)childchild.Tag == "right")
-                    {
-                        MessageBox.Show("Correct! ", "Validation"); 
-                        correctAnswer = true;
-                    }
+                    if ((string)childchild.Tag == "right")
+                    {correctAnswer = true;}
                     else
-                    {
-                        correctAnswer = false;
-                    }
-                    
+                    {correctAnswer = false;}
                 }
-                
             }
             if (!correctAnswer)
-            {
-                
-                answers[pointer] = false;
-            }
+            {answers[pointer] = false;}
             else
-            {
-                answers[pointer] = true;
-            }
+            {answers[pointer] = true;}
+        }
 
+        public void questionHandler()
+        {
             // remove old question and options
             questionpane.Children.Clear();
 
@@ -110,12 +100,12 @@ namespace Octopus
                 block = new TextBlock();
                 block.Name = "option" + counter;
                 block.Text = option.Trim();
-
+                block.Margin = new Thickness(10);
                 if(counter == spot)
                 {
                     StackPanel answerPane = new StackPanel();
                     answerPane.Orientation = Orientation.Horizontal;
-
+                    
                     CheckBox boxAnswer = new CheckBox();
                     boxAnswer.Margin = new Thickness(30, 10, 0, 5);
                     boxAnswer.Tag = "right";
@@ -123,6 +113,7 @@ namespace Octopus
                     TextBlock blockAnswer = new TextBlock();
                     
                     blockAnswer.Text = myQuestion.quizanswer.Trim();
+                    blockAnswer.Margin = new Thickness(10);
                     added = true;
 
                     answerPane.Children.Add(boxAnswer);
@@ -157,23 +148,46 @@ namespace Octopus
 
         public void Submit_Quiz_Click(object sender, RoutedEventArgs e)
         {
-
+           // quizid, number of questions, score, userid
         }
 
         public void Next_Question_Click(object sender, RoutedEventArgs e)
         {
-            if (pointer == 5)
-            pointer++;
-            myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
-            questionHandler();
+            if (pointer < answers.Length)
+            {
+                checkAnswer();
+                pointer++;
+                if (pointer == answers.Length -1) 
+                {next_button.Content = "Submit";}
+                
+                else
+                {
+                    myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
+                    questionHandler();
+                    next_button.Content = "Next";
+                }
+            }
+            else
+            {
+                MessageBox.Show("Now submitting quiz with a score of " + getNumberCorrect() + "/" + answers.Length, "Validation");
+            }
 
         }
 
         public void Previous_Question_Click(object sender, RoutedEventArgs e)
         {
+            checkAnswer();
             pointer--;
             myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
             questionHandler();
+        }
+
+        public int getNumberCorrect()
+        {
+            int response = 0;
+            foreach (bool value in answers)
+            { if (value) {response++;} }
+            return response;
         }
     }
 }
