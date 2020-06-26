@@ -77,6 +77,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="fetchRandomQuestionsfromQuiz" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="number" Type="int" Mode="In" />
+        </Function>
         <Function Name="getQuizQuestions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="quizid" Type="int" Mode="In" />
         </Function>
@@ -214,6 +218,10 @@
           <FunctionImport Name="getQuizQuestions" ReturnType="Collection(octopusModel.getQuizQuestions_Result)">
           <Parameter Name="quizid" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="fetchRandomQuestionsfromQuiz" ReturnType="Collection(octopusModel.fetchRandomQuestionsfromQuiz_Result)">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="number" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="selectQuizzes_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -231,6 +239,14 @@
           <Property Type="DateTime" Name="activity_begun" Nullable="false" Precision="23" />
         </ComplexType>
         <ComplexType Name="getQuizQuestions_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="Int32" Name="quizid" Nullable="false" />
+          <Property Type="String" Name="quizquestion" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="quizanswer" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="quizoptions" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="quizquestiontype" Nullable="false" MaxLength="25" />
+        </ComplexType>
+        <ComplexType Name="fetchRandomQuestionsfromQuiz_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
           <Property Type="Int32" Name="quizid" Nullable="false" />
           <Property Type="String" Name="quizquestion" Nullable="false" MaxLength="100" />
@@ -338,6 +354,18 @@
           <FunctionImportMapping FunctionImportName="getQuizQuestions" FunctionName="octopusModel.Store.getQuizQuestions">
             <ResultMapping>
               <ComplexTypeMapping TypeName="octopusModel.getQuizQuestions_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="quizid" ColumnName="quizid" />
+                <ScalarProperty Name="quizquestion" ColumnName="quizquestion" />
+                <ScalarProperty Name="quizanswer" ColumnName="quizanswer" />
+                <ScalarProperty Name="quizoptions" ColumnName="quizoptions" />
+                <ScalarProperty Name="quizquestiontype" ColumnName="quizquestiontype" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="fetchRandomQuestionsfromQuiz" FunctionName="octopusModel.Store.fetchRandomQuestionsfromQuiz">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="octopusModel.fetchRandomQuestionsfromQuiz_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="quizid" ColumnName="quizid" />
                 <ScalarProperty Name="quizquestion" ColumnName="quizquestion" />

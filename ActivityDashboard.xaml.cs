@@ -46,7 +46,7 @@ namespace Octopus
         }
         private void Take_Quiz_Click(object sender, RoutedEventArgs e)
         {
-            QuizTaker takeQuizPage = new QuizTaker(((Octopus.selectQuizzes_Result)quizListBox.SelectedItem).id);
+            QuizTaker takeQuizPage = new QuizTaker(((Octopus.selectQuizzes_Result)quizListBox.SelectedItem).id, (int)((Octopus.selectQuizzes_Result)quizListBox.SelectedItem).count);
             this.NavigationService.Navigate(takeQuizPage);
         }
 

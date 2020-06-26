@@ -94,5 +94,18 @@ namespace Octopus
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<getQuizQuestions_Result>("getQuizQuestions", quizidParameter);
         }
+    
+        public virtual ObjectResult<fetchRandomQuestionsfromQuiz_Result> fetchRandomQuestionsfromQuiz(Nullable<int> id, Nullable<int> number)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            var numberParameter = number.HasValue ?
+                new ObjectParameter("number", number) :
+                new ObjectParameter("number", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<fetchRandomQuestionsfromQuiz_Result>("fetchRandomQuestionsfromQuiz", idParameter, numberParameter);
+        }
     }
 }

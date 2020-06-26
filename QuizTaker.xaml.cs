@@ -23,26 +23,26 @@ namespace Octopus
     public partial class QuizTaker : Page
     {
         int pointer = 0;
-        Octopus.getQuizQuestions_Result myQuestion;
+        Octopus.fetchRandomQuestionsfromQuiz_Result myQuestion;
         bool[] answers = new bool[10];
-        public QuizTaker()
-        {
-            InitializeComponent();
-        }
 
+        public QuizTaker()
+        {InitializeComponent();}
         
         public QuizTaker(object data) : this()
-        {
-            this.DataContext = data;
-            
-        }
+        {this.DataContext = data;}
 
-        public QuizTaker(int id) :  this()
+        public QuizTaker(int id, int number) :  this()
         {
             octopusEntities1 db = new octopusEntities1();
-            questionListBox.ItemsSource = db.getQuizQuestions(id);
-            myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
+            questionListBox.ItemsSource = db.fetchRandomQuestionsfromQuiz(id,number);
+            answers = new bool[number];
+
+            // randomly select 10 of these questions
+
+            myQuestion = (Octopus.fetchRandomQuestionsfromQuiz_Result)this.questionListBox.Items[pointer];
             questionHandler();
+            
         }
 
         public void checkAnswer()
@@ -88,7 +88,16 @@ namespace Octopus
             StackPanel newOptionsPane = new StackPanel();
             bool added = false;
             int counter = 0;
-            foreach(string option in options)
+
+            for (int i = 0; i < options.Length - 1; i++)
+            {
+                int j = rnd.Next(i, options.Length);
+                string temp = options[i];
+                options[i] = options[j];
+                options[j] = temp;
+            }
+
+            foreach (string option in options)
             {
                 newOptionsPane = new StackPanel();
                 newOptionsPane.Orientation = Orientation.Horizontal;
@@ -146,14 +155,24 @@ namespace Octopus
 
         }
 
+        public void Submit_Quiz()
+        {
+            MessageBox.Show("Now submitting quiz with a score of " + getNumberCorrect() + "/" + answers.Length, "Validation");
+        }
+
         public void Submit_Quiz_Click(object sender, RoutedEventArgs e)
         {
-           // quizid, number of questions, score, userid
+            // will submit to taken quizzes
+            MessageBox.Show("Now submitting quiz with a score of " + getNumberCorrect() + "/" + answers.Length, "Validation");
         }
 
         public void Next_Question_Click(object sender, RoutedEventArgs e)
         {
-            if (pointer < answers.Length)
+            if ((string)next_button.Content == "Submit")
+            {
+                Submit_Quiz();
+            }
+            else if (pointer < answers.Length)
             {
                 checkAnswer();
                 pointer++;
@@ -162,14 +181,10 @@ namespace Octopus
                 
                 else
                 {
-                    myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
+                    myQuestion = (Octopus.fetchRandomQuestionsfromQuiz_Result)this.questionListBox.Items[pointer];
                     questionHandler();
                     next_button.Content = "Next";
                 }
-            }
-            else
-            {
-                MessageBox.Show("Now submitting quiz with a score of " + getNumberCorrect() + "/" + answers.Length, "Validation");
             }
 
         }
@@ -178,7 +193,7 @@ namespace Octopus
         {
             checkAnswer();
             pointer--;
-            myQuestion = (Octopus.getQuizQuestions_Result)this.questionListBox.Items[pointer];
+            myQuestion = (Octopus.fetchRandomQuestionsfromQuiz_Result)this.questionListBox.Items[pointer];
             questionHandler();
         }
 
