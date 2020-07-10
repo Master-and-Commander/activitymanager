@@ -18,6 +18,7 @@ namespace Octopus
         public quiz()
         {
             this.quizquestions = new HashSet<quizquestion>();
+            this.quiztakens = new HashSet<quiztaken>();
         }
     
         public int id { get; set; }
@@ -28,5 +29,7 @@ namespace Octopus
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<quizquestion> quizquestions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<quiztaken> quiztakens { get; set; }
     }
 }

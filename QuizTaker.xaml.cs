@@ -5,13 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Timers;
+using System.Runtime.CompilerServices;
+using System.Security.Policy;
+using System.ComponentModel;
 
 namespace Octopus
 {
@@ -19,30 +16,144 @@ namespace Octopus
     /// Interaction logic for QuizTaker.xaml
     /// </summary>
     /// 
-    
+
+    public class QuizData : INotifyPropertyChanged
+    {
+        private int quizid;
+        private int userid;
+        private int time;
+        private string timeString;
+        private System.Timers.Timer aTimer = new System.Timers.Timer(1000);
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event EventHandler quizEnded;
+
+
+        public int QuizID
+        {
+            get
+            {
+                return quizid;
+            }
+            set
+            {
+                quizid = value;
+            }
+        }
+
+        public int UserID
+        {
+            get
+            {
+                return userid;
+            }
+            set
+            {
+                userid = value;
+            }
+        }
+
+        public int QuizTime
+        {
+            get
+            {
+                return time;
+            }
+            set
+            {
+                time = value;
+                TimeSpan t = TimeSpan.FromMilliseconds(time);
+                this.QuizTimeString = string.Format("{0:D2}:{1:D2}",
+                                        t.Minutes,
+                                        t.Seconds);
+                aTimer = new System.Timers.Timer(1000);
+                aTimer.Elapsed += OnTimedEvent;
+                aTimer.AutoReset = true;
+                aTimer.Enabled = true;
+            }
+        }
+        
+        public string QuizTimeString
+        {
+            get
+            {
+                return timeString;
+            }
+            set
+            {
+                timeString = value;
+                NotifyPropertyChanged("QuizTimeString");
+            }
+        }
+        
+
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            // update quiz time
+            // update quiz time string
+            time -= 1000;
+            TimeSpan t = TimeSpan.FromMilliseconds(time);
+            this.QuizTimeString = string.Format("{0:D2}:{1:D2}",
+                                    t.Minutes,
+                                    t.Seconds);
+            if(time <= 0)
+            {
+                aTimer.Stop();
+                this.QuizTimeString = "Time's up!";
+                quizEnded?.Invoke(this, e);
+
+            }
+        }
+    }
     public partial class QuizTaker : Page
     {
+        
+
         int pointer = 0;
         Octopus.fetchRandomQuestionsfromQuiz_Result myQuestion;
         bool[] answers = new bool[10];
+        QuizData quizdata;
 
         public QuizTaker()
         {InitializeComponent();}
         
         public QuizTaker(object data) : this()
-        {this.DataContext = data;}
+        {
+            this.DataContext = data;
+        }
 
         public QuizTaker(int id, int number) :  this()
         {
+            quizdata = new QuizData
+            {
+                QuizID = id,
+                UserID = 0,
+                QuizTime = 100000
+            };
+            this.DataContext = quizdata;
+            quizdata.quizEnded += Quizdata_quizEnded;
             octopusEntities1 db = new octopusEntities1();
             questionListBox.ItemsSource = db.fetchRandomQuestionsfromQuiz(id,number);
             answers = new bool[number];
-
+            
             // randomly select 10 of these questions
 
             myQuestion = (Octopus.fetchRandomQuestionsfromQuiz_Result)this.questionListBox.Items[pointer];
             questionHandler();
             
+        }
+
+        private void Quizdata_quizEnded(object sender, EventArgs e)
+        {
+            Submit_Quiz();
         }
 
         public void checkAnswer()
@@ -89,6 +200,7 @@ namespace Octopus
             bool added = false;
             int counter = 0;
 
+            // randomize ordering of options
             for (int i = 0; i < options.Length - 1; i++)
             {
                 int j = rnd.Next(i, options.Length);
@@ -157,13 +269,16 @@ namespace Octopus
 
         public void Submit_Quiz()
         {
+            // QuizTaken should have 0. id, 1. userid, 2. quizid, 3. numberofcorrectanswers, 4. totalnumberofquestions, failedquestion ids, failed answers
             MessageBox.Show("Now submitting quiz with a score of " + getNumberCorrect() + "/" + answers.Length, "Validation");
+            octopusEntities1 db = new octopusEntities1();
+            //db.insertCompletedQuiz(quizdata.UserID, quizdata.QuizID,getNumberCorrect(),answers.Length, "5|10");
+
         }
 
         public void Submit_Quiz_Click(object sender, RoutedEventArgs e)
         {
-            // will submit to taken quizzes
-            MessageBox.Show("Now submitting quiz with a score of " + getNumberCorrect() + "/" + answers.Length, "Validation");
+            Submit_Quiz();
         }
 
         public void Next_Question_Click(object sender, RoutedEventArgs e)

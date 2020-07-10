@@ -33,6 +33,7 @@ namespace Octopus
         public virtual DbSet<quiz> quizs { get; set; }
         public virtual DbSet<quizquestion> quizquestions { get; set; }
         public virtual DbSet<user> users { get; set; }
+        public virtual DbSet<quiztaken> quiztakens { get; set; }
     
         public virtual int insertQuiz(string quizname, Nullable<int> quizcount, string quizdescription, ObjectParameter identity)
         {
@@ -106,6 +107,48 @@ namespace Octopus
                 new ObjectParameter("number", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<fetchRandomQuestionsfromQuiz_Result>("fetchRandomQuestionsfromQuiz", idParameter, numberParameter);
+        }
+    
+        public virtual int insertCompletedQuiz(Nullable<int> userid, Nullable<int> quizid, Nullable<int> numbercorrect, Nullable<int> totalnumber, string failedlist)
+        {
+            var useridParameter = userid.HasValue ?
+                new ObjectParameter("userid", userid) :
+                new ObjectParameter("userid", typeof(int));
+    
+            var quizidParameter = quizid.HasValue ?
+                new ObjectParameter("quizid", quizid) :
+                new ObjectParameter("quizid", typeof(int));
+    
+            var numbercorrectParameter = numbercorrect.HasValue ?
+                new ObjectParameter("numbercorrect", numbercorrect) :
+                new ObjectParameter("numbercorrect", typeof(int));
+    
+            var totalnumberParameter = totalnumber.HasValue ?
+                new ObjectParameter("totalnumber", totalnumber) :
+                new ObjectParameter("totalnumber", typeof(int));
+    
+            var failedlistParameter = failedlist != null ?
+                new ObjectParameter("failedlist", failedlist) :
+                new ObjectParameter("failedlist", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("insertCompletedQuiz", useridParameter, quizidParameter, numbercorrectParameter, totalnumberParameter, failedlistParameter);
+        }
+    
+        public virtual ObjectResult<fetchTakenQuizzes_Result> fetchTakenQuizzes(Nullable<int> userid, Nullable<int> quizid, Nullable<int> numberofresults)
+        {
+            var useridParameter = userid.HasValue ?
+                new ObjectParameter("userid", userid) :
+                new ObjectParameter("userid", typeof(int));
+    
+            var quizidParameter = quizid.HasValue ?
+                new ObjectParameter("quizid", quizid) :
+                new ObjectParameter("quizid", typeof(int));
+    
+            var numberofresultsParameter = numberofresults.HasValue ?
+                new ObjectParameter("numberofresults", numberofresults) :
+                new ObjectParameter("numberofresults", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<fetchTakenQuizzes_Result>("fetchTakenQuizzes", useridParameter, quizidParameter, numberofresultsParameter);
         }
     }
 }

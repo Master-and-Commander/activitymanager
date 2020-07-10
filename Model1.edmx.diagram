@@ -12,6 +12,8 @@
         <EntityTypeShape EntityType="octopusModel.quizquestion" Width="1.5" PointX="2.875" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="octopusModel.user" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="octopusModel.FK_quizquestion_quizzes" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="octopusModel.quiztaken" Width="1.5" PointX="3" PointY="8" />
+        <AssociationConnector Association="octopusModel.FK_quiztaken_quiz" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -56,6 +56,17 @@
           <Property Name="quizoptions" Type="varchar" MaxLength="300" Nullable="false" />
           <Property Name="quizquestiontype" Type="varchar" MaxLength="25" Nullable="false" />
         </EntityType>
+        <EntityType Name="quiztaken">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="quizid" Type="int" />
+          <Property Name="userid" Type="int" />
+          <Property Name="numberofcorrectanswers" Type="int" />
+          <Property Name="totalnumberofquestions" Type="int" />
+          <Property Name="failedidlist" Type="varchar" MaxLength="500" />
+        </EntityType>
         <EntityType Name="user">
           <Key>
             <PropertyRef Name="id" />
@@ -77,12 +88,36 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_quiztaken_quiz">
+          <End Role="quiz" Type="Self.quiz" Multiplicity="0..1" />
+          <End Role="quiztaken" Type="Self.quiztaken" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quiz">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quiztaken">
+              <PropertyRef Name="quizid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="fetchRandomQuestionsfromQuiz" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
           <Parameter Name="number" Type="int" Mode="In" />
         </Function>
+        <Function Name="fetchTakenQuizzes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userid" Type="int" Mode="In" />
+          <Parameter Name="quizid" Type="int" Mode="In" />
+          <Parameter Name="numberofresults" Type="int" Mode="In" />
+        </Function>
         <Function Name="getQuizQuestions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="quizid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="insertCompletedQuiz" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userid" Type="int" Mode="In" />
+          <Parameter Name="quizid" Type="int" Mode="In" />
+          <Parameter Name="numbercorrect" Type="int" Mode="In" />
+          <Parameter Name="totalnumber" Type="int" Mode="In" />
+          <Parameter Name="failedlist" Type="varchar" Mode="In" />
         </Function>
         <Function Name="insertQuestionToQuiz" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="entryid" Type="int" Mode="In" />
@@ -105,10 +140,15 @@
           <EntitySet Name="challenge" EntityType="Self.challenge" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="quiz" EntityType="Self.quiz" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="quizquestion" EntityType="Self.quizquestion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="quiztaken" EntityType="Self.quiztaken" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_quizquestion_quizzes" Association="Self.FK_quizquestion_quizzes">
             <End Role="quiz" EntitySet="quiz" />
             <End Role="quizquestion" EntitySet="quizquestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_quiztaken_quiz" Association="Self.FK_quiztaken_quiz">
+            <End Role="quiz" EntitySet="quiz" />
+            <End Role="quiztaken" EntitySet="quiztaken" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -155,6 +195,7 @@
           <Property Name="userid" Type="Int32" />
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="quizquestions" Relationship="Self.FK_quizquestion_quizzes" FromRole="quiz" ToRole="quizquestion" />
+          <NavigationProperty Name="quiztakens" Relationship="octopusModel.FK_quiztaken_quiz" FromRole="quiz" ToRole="quiztaken" />
         </EntityType>
         <EntityType Name="quizquestion">
           <Key>
@@ -222,6 +263,23 @@
             <Parameter Name="id" Mode="In" Type="Int32" />
             <Parameter Name="number" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="quiztakens" EntityType="octopusModel.quiztaken" />
+          <AssociationSet Name="FK_quiztaken_quiz" Association="octopusModel.FK_quiztaken_quiz">
+            <End Role="quiz" EntitySet="quizs" />
+            <End Role="quiztaken" EntitySet="quiztakens" />
+          </AssociationSet>
+          <FunctionImport Name="insertCompletedQuiz">
+            <Parameter Name="userid" Mode="In" Type="Int32" />
+            <Parameter Name="quizid" Mode="In" Type="Int32" />
+            <Parameter Name="numbercorrect" Mode="In" Type="Int32" />
+            <Parameter Name="totalnumber" Mode="In" Type="Int32" />
+            <Parameter Name="failedlist" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="fetchTakenQuizzes" ReturnType="Collection(octopusModel.fetchTakenQuizzes_Result)">
+            <Parameter Name="userid" Mode="In" Type="Int32" />
+            <Parameter Name="quizid" Mode="In" Type="Int32" />
+            <Parameter Name="numberofresults" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="selectQuizzes_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -253,6 +311,38 @@
           <Property Type="String" Name="quizanswer" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="quizoptions" Nullable="false" MaxLength="300" />
           <Property Type="String" Name="quizquestiontype" Nullable="false" MaxLength="25" />
+        </ComplexType>
+        <EntityType Name="quiztaken">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="quizid" Type="Int32" />
+          <Property Name="userid" Type="Int32" />
+          <Property Name="numberofcorrectanswers" Type="Int32" />
+          <Property Name="totalnumberofquestions" Type="Int32" />
+          <Property Name="failedidlist" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="quiz" Relationship="octopusModel.FK_quiztaken_quiz" FromRole="quiztaken" ToRole="quiz" />
+        </EntityType>
+        <Association Name="FK_quiztaken_quiz">
+          <End Type="octopusModel.quiz" Role="quiz" Multiplicity="0..1" />
+          <End Type="octopusModel.quiztaken" Role="quiztaken" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quiz">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quiztaken">
+              <PropertyRef Name="quizid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="fetchTakenQuizzes_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="Int32" Name="quizid" Nullable="true" />
+          <Property Type="Int32" Name="userid" Nullable="true" />
+          <Property Type="Int32" Name="numberofcorrectanswers" Nullable="true" />
+          <Property Type="Int32" Name="totalnumberofquestions" Nullable="true" />
+          <Property Type="String" Name="failedidlist" Nullable="true" MaxLength="500" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -372,6 +462,31 @@
                 <ScalarProperty Name="quizanswer" ColumnName="quizanswer" />
                 <ScalarProperty Name="quizoptions" ColumnName="quizoptions" />
                 <ScalarProperty Name="quizquestiontype" ColumnName="quizquestiontype" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="quiztakens">
+            <EntityTypeMapping TypeName="octopusModel.quiztaken">
+              <MappingFragment StoreEntitySet="quiztaken">
+                <ScalarProperty Name="failedidlist" ColumnName="failedidlist" />
+                <ScalarProperty Name="totalnumberofquestions" ColumnName="totalnumberofquestions" />
+                <ScalarProperty Name="numberofcorrectanswers" ColumnName="numberofcorrectanswers" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="quizid" ColumnName="quizid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="insertCompletedQuiz" FunctionName="octopusModel.Store.insertCompletedQuiz" />
+          <FunctionImportMapping FunctionImportName="fetchTakenQuizzes" FunctionName="octopusModel.Store.fetchTakenQuizzes">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="octopusModel.fetchTakenQuizzes_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="quizid" ColumnName="quizid" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="numberofcorrectanswers" ColumnName="numberofcorrectanswers" />
+                <ScalarProperty Name="totalnumberofquestions" ColumnName="totalnumberofquestions" />
+                <ScalarProperty Name="failedidlist" ColumnName="failedidlist" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

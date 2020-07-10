@@ -88,6 +88,9 @@
     <Compile Include="fetchRandomQuestionsfromQuiz_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="fetchTakenQuizzes_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="getQuizQuestions_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -117,6 +120,9 @@
     </Compile>
     <Compile Include="QuizQuestions.xaml.cs">
       <DependentUpon>QuizQuestions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="quiztaken.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="QuizTaker.xaml.cs">
       <DependentUpon>QuizTaker.xaml</DependentUpon>
