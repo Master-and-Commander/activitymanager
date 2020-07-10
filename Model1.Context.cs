@@ -150,5 +150,27 @@ namespace Octopus
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<fetchTakenQuizzes_Result>("fetchTakenQuizzes", useridParameter, quizidParameter, numberofresultsParameter);
         }
+    
+        public virtual ObjectResult<checkForExistingQuestion_Result> checkForExistingQuestion(Nullable<int> quizid, string question)
+        {
+            var quizidParameter = quizid.HasValue ?
+                new ObjectParameter("quizid", quizid) :
+                new ObjectParameter("quizid", typeof(int));
+    
+            var questionParameter = question != null ?
+                new ObjectParameter("question", question) :
+                new ObjectParameter("question", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<checkForExistingQuestion_Result>("checkForExistingQuestion", quizidParameter, questionParameter);
+        }
+    
+        public virtual int dropQuizQuestions(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("dropQuizQuestions", idParameter);
+        }
     }
 }

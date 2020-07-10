@@ -44,6 +44,7 @@
           <Property Name="count" Type="int" />
           <Property Name="userid" Type="int" />
           <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="time" Type="int" />
         </EntityType>
         <EntityType Name="quizquestion">
           <Key>
@@ -66,6 +67,7 @@
           <Property Name="numberofcorrectanswers" Type="int" />
           <Property Name="totalnumberofquestions" Type="int" />
           <Property Name="failedidlist" Type="varchar" MaxLength="500" />
+          <Property Name="timetaken" Type="int" />
         </EntityType>
         <EntityType Name="user">
           <Key>
@@ -100,6 +102,13 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="checkForExistingQuestion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="quizid" Type="int" Mode="In" />
+          <Parameter Name="question" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="dropQuizQuestions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+        </Function>
         <Function Name="fetchRandomQuestionsfromQuiz" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
           <Parameter Name="number" Type="int" Mode="In" />
@@ -196,6 +205,7 @@
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="quizquestions" Relationship="Self.FK_quizquestion_quizzes" FromRole="quiz" ToRole="quizquestion" />
           <NavigationProperty Name="quiztakens" Relationship="octopusModel.FK_quiztaken_quiz" FromRole="quiz" ToRole="quiztaken" />
+          <Property Name="time" Type="Int32" />
         </EntityType>
         <EntityType Name="quizquestion">
           <Key>
@@ -280,6 +290,13 @@
             <Parameter Name="quizid" Mode="In" Type="Int32" />
             <Parameter Name="numberofresults" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="checkForExistingQuestion" ReturnType="Collection(octopusModel.checkForExistingQuestion_Result)">
+            <Parameter Name="quizid" Mode="In" Type="Int32" />
+            <Parameter Name="question" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="dropQuizQuestions">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="selectQuizzes_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -323,6 +340,7 @@
           <Property Name="totalnumberofquestions" Type="Int32" />
           <Property Name="failedidlist" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="quiz" Relationship="octopusModel.FK_quiztaken_quiz" FromRole="quiztaken" ToRole="quiz" />
+          <Property Name="timetaken" Type="Int32" />
         </EntityType>
         <Association Name="FK_quiztaken_quiz">
           <End Type="octopusModel.quiz" Role="quiz" Multiplicity="0..1" />
@@ -343,6 +361,14 @@
           <Property Type="Int32" Name="numberofcorrectanswers" Nullable="true" />
           <Property Type="Int32" Name="totalnumberofquestions" Nullable="true" />
           <Property Type="String" Name="failedidlist" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="checkForExistingQuestion_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="Int32" Name="quizid" Nullable="false" />
+          <Property Type="String" Name="quizquestion" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="quizanswer" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="quizoptions" Nullable="false" MaxLength="300" />
+          <Property Type="String" Name="quizquestiontype" Nullable="false" MaxLength="25" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -386,6 +412,7 @@
           <EntitySetMapping Name="quizs">
             <EntityTypeMapping TypeName="octopusModel.quiz">
               <MappingFragment StoreEntitySet="quiz">
+                <ScalarProperty Name="time" ColumnName="time" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="count" ColumnName="count" />
@@ -468,6 +495,7 @@
           <EntitySetMapping Name="quiztakens">
             <EntityTypeMapping TypeName="octopusModel.quiztaken">
               <MappingFragment StoreEntitySet="quiztaken">
+                <ScalarProperty Name="timetaken" ColumnName="timetaken" />
                 <ScalarProperty Name="failedidlist" ColumnName="failedidlist" />
                 <ScalarProperty Name="totalnumberofquestions" ColumnName="totalnumberofquestions" />
                 <ScalarProperty Name="numberofcorrectanswers" ColumnName="numberofcorrectanswers" />
@@ -490,6 +518,19 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="checkForExistingQuestion" FunctionName="octopusModel.Store.checkForExistingQuestion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="octopusModel.checkForExistingQuestion_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="quizid" ColumnName="quizid" />
+                <ScalarProperty Name="quizquestion" ColumnName="quizquestion" />
+                <ScalarProperty Name="quizanswer" ColumnName="quizanswer" />
+                <ScalarProperty Name="quizoptions" ColumnName="quizoptions" />
+                <ScalarProperty Name="quizquestiontype" ColumnName="quizquestiontype" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="dropQuizQuestions" FunctionName="octopusModel.Store.dropQuizQuestions" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

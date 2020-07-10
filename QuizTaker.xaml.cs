@@ -9,6 +9,8 @@ using System.Timers;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.ComponentModel;
+using System.Net.Mail;
+using System.IO;
 
 namespace Octopus
 {
@@ -22,13 +24,17 @@ namespace Octopus
         private int quizid;
         private int userid;
         private int time;
+        private int increment = 1000;
         private string timeString;
         private System.Timers.Timer aTimer = new System.Timers.Timer(1000);
         public event PropertyChangedEventHandler PropertyChanged;
 
         public event EventHandler quizEnded;
 
-
+        public void stopTimer()
+        {
+            aTimer.Stop();
+        }
         public int QuizID
         {
             get
@@ -66,7 +72,7 @@ namespace Octopus
                 this.QuizTimeString = string.Format("{0:D2}:{1:D2}",
                                         t.Minutes,
                                         t.Seconds);
-                aTimer = new System.Timers.Timer(1000);
+                aTimer = new System.Timers.Timer(increment);
                 aTimer.Elapsed += OnTimedEvent;
                 aTimer.AutoReset = true;
                 aTimer.Enabled = true;
@@ -97,9 +103,9 @@ namespace Octopus
 
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            // update quiz time
+            
             // update quiz time string
-            time -= 1000;
+            time -= increment;
             TimeSpan t = TimeSpan.FromMilliseconds(time);
             this.QuizTimeString = string.Format("{0:D2}:{1:D2}",
                                     t.Minutes,
@@ -138,11 +144,16 @@ namespace Octopus
                 UserID = 0,
                 QuizTime = 100000
             };
+
             this.DataContext = quizdata;
             quizdata.quizEnded += Quizdata_quizEnded;
             octopusEntities1 db = new octopusEntities1();
             questionListBox.ItemsSource = db.fetchRandomQuestionsfromQuiz(id,number);
             answers = new bool[number];
+           for (int i = 0; i < answers.Length; i++)
+            {
+                answers[i] = false;
+            }
             
             // randomly select 10 of these questions
 
@@ -154,7 +165,9 @@ namespace Octopus
         private void Quizdata_quizEnded(object sender, EventArgs e)
         {
             Submit_Quiz();
+            quizdata.stopTimer();
         }
+
 
         public void checkAnswer()
         {
@@ -175,6 +188,7 @@ namespace Octopus
             else
             {answers[pointer] = true;}
         }
+
 
         public void questionHandler()
         {
@@ -267,11 +281,47 @@ namespace Octopus
 
         }
 
+
+        public string returnMissedQuestions()
+        {
+            string missedQuestions = "Here are the questions you missed:\n\n";
+            Octopus.fetchRandomQuestionsfromQuiz_Result currentQuestion;
+            for (int i = 0; i < answers.Length; i++)
+            {
+                
+                
+                if(!answers[i])
+                {
+
+                    currentQuestion = (Octopus.fetchRandomQuestionsfromQuiz_Result)this.questionListBox.Items[i];
+                    missedQuestions += currentQuestion.quizquestion + "\n";
+                    missedQuestions += "Answer: " + currentQuestion.quizanswer + "\n\n";
+                }
+            }
+            return missedQuestions;
+        }
+        public void writeToFile()
+        {
+            string[] lines = { "Hello User", "you took a quiz with a score of " + getNumberCorrect() + "/" + answers.Length, returnMissedQuestions() };
+
+            // Set a variable to the Documents path.
+            string docPath =
+              Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            Random rnd = new Random();
+
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "quizresults" + rnd.Next(0, 100000) + ".txt")))
+            {
+                foreach (string line in lines)
+                    outputFile.WriteLine(line);
+            }
+        }
+
         public void Submit_Quiz()
         {
             // QuizTaken should have 0. id, 1. userid, 2. quizid, 3. numberofcorrectanswers, 4. totalnumberofquestions, failedquestion ids, failed answers
-            MessageBox.Show("Now submitting quiz with a score of " + getNumberCorrect() + "/" + answers.Length, "Validation");
+            MessageBox.Show("Now submitting quiz with a score of " + getNumberCorrect() + "/" + answers.Length + ". A file has been uploaded to your my documents folder with more info ", "Validation");
             octopusEntities1 db = new octopusEntities1();
+            writeToFile();
             //db.insertCompletedQuiz(quizdata.UserID, quizdata.QuizID,getNumberCorrect(),answers.Length, "5|10");
 
         }

@@ -10,18 +10,14 @@
 namespace Octopus
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class quiztaken
+    public partial class checkForExistingQuestion_Result
     {
         public int id { get; set; }
-        public Nullable<int> quizid { get; set; }
-        public Nullable<int> userid { get; set; }
-        public Nullable<int> numberofcorrectanswers { get; set; }
-        public Nullable<int> totalnumberofquestions { get; set; }
-        public string failedidlist { get; set; }
-        public Nullable<int> timetaken { get; set; }
-    
-        public virtual quiz quiz { get; set; }
+        public int quizid { get; set; }
+        public string quizquestion { get; set; }
+        public string quizanswer { get; set; }
+        public string quizoptions { get; set; }
+        public string quizquestiontype { get; set; }
     }
 }
